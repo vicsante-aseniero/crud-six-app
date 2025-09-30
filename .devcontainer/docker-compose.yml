@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  dotnet-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: dotnet-app
+
+    volumes:
+      - ../..:/workspaces:cached
+
+    # Overrides default command so things don't shut down after the process ends.
+    command: sleep infinity
+
+    # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
+    networks: 
+      - keycloak-dbs-brokers_backend_network
+
+    ports:
+      - 5000:5000
+      - 5001:5001
+      - 8000:8000
+
+    # Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+    user: root
+
+    # Use "forwardPorts" in **devcontainer.json** to forward an app port locally.
+    # (Adding the "ports" property to this file will not forward from a Codespace.)
+
+networks:
+  keycloak-dbs-brokers_backend_network:
+    external: true
+    name: keycloak-dbs-brokers_backend_network
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: keycloak-dbs-brokers_backend_network
+    enable_ipv6: false
+    ipam:
+      driver: default
+      config:
+        - subnet: 237.84.2.178/16
+          gateway: 237.84.2.178
