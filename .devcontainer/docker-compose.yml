@@ -6,7 +6,17 @@ services:
       context: .
       dockerfile: Dockerfile
 
-    container_name: dotnet-app
+    container_name: crud-six-app
+
+    # Resource limits for 16GB RAM / i7-1355U workstation
+    deploy:
+      resources:
+        limits:
+          memory: 8g
+          cpus: '6'
+        reservations:
+          memory: 2g
+          cpus: '2'
 
     volumes:
       - ../..:/workspaces:cached
@@ -23,8 +33,8 @@ services:
       - 5001:5001
       - 8000:8000
 
-    # Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-    user: root
+    # Using non-root user for security. More info: https://aka.ms/dev-containers-non-root.
+    user: vscode
 
     # Use "forwardPorts" in **devcontainer.json** to forward an app port locally.
     # (Adding the "ports" property to this file will not forward from a Codespace.)
